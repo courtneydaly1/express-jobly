@@ -55,50 +55,49 @@ class Company {
   // -results [{ handle, name, description, numEmployees, logoUrl}, ...]
 
 
-  static async findAll(findByFilter = {}) {
-    let query =
-          `SELECT handle,
-                  name,
-                  description,
-                  num_employees AS "numEmployees",
-                  logo_url AS "logoUrl"
-           FROM companies`;
-    let queryVal = [];
-    let whereExpressions= [];
+  static async findAll(searchFilters = {}) {
+    let query = `SELECT handle,
+                        name,
+                        description,
+                        num_employees AS "numEmployees",
+                        logo_url AS "logoUrl"
+                 FROM companies`;
+    let whereExpressions = [];
+    let queryValues = [];
 
-    const {minEmployees, maxEmployees, name} = findByFilter;
+    const { minEmployees, maxEmployees, name } = searchFilters;
 
-    if( minEmployees !== undefined && maxEmployees !== undefined && minEmployees > maxEmployees ){
-      throw new BadRequestError("Min Empoyees cannot be more than Max Employees", 400)
+    if (minEmployees > maxEmployees) {
+      throw new BadRequestError("Min employees cannot be greater than max");
     }
 
-    // for each search, add to whereExpressions and queryVal to populate SQL
+    // For each possible search term, add to whereExpressions and queryValues so
+    // we can generate the right SQL
 
-    if (minEmployees !== undefined){
-      queryVal.push(minEmployees);
-      whereExpressions.push(`num_employees >= $${queryVal.length}`);
+    if (minEmployees !== undefined) {
+      queryValues.push(minEmployees);
+      whereExpressions.push(`num_employees >= $${queryValues.length}`);
     }
 
-    if(maxEmployees !== undefined){
-      queryVal.push(maxEmployees);
-      whereExpressions.push(`num_employees <= $${queryVal.length}`);
+    if (maxEmployees !== undefined) {
+      queryValues.push(maxEmployees);
+      whereExpressions.push(`num_employees <= $${queryValues.length}`);
     }
 
-    if(name !==undefined){
-      queryVal.push(`%${name}%`);
-      whereExpressions.push(`name ILIKE $${queryVal.length}`);
+    if (name) {
+      queryValues.push(`%${name}%`);
+      whereExpressions.push(`name ILIKE $${queryValues.length}`);
     }
 
-    if(whereExpressions.length >0){
+    if (whereExpressions.length > 0) {
       query += " WHERE " + whereExpressions.join(" AND ");
     }
 
-    // Final wording for query and return 
+    // Finalize query and return results
 
-    query =+ " ORDER BY name ";
-    const companiesRes = await db.query(query, queryVal);
+    query += " ORDER BY name";
+    const companiesRes = await db.query(query, queryValues);
     return companiesRes.rows;
-
   }
 
   /** Given a company handle, return data about company.

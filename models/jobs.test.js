@@ -2,7 +2,7 @@
 
 const { NotFoundError, BadRequestError } = require("../expressError");
 const db = require("../db");
-const Job = require("./job");
+const Job = require("./jobs");
 const {
   commonBeforeAll,
   commonBeforeEach,
