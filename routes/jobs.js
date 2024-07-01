@@ -36,10 +36,17 @@ router.post("/", ensureAdmin, async (req,res,next)=>{
     }
 })
 
-// Get /
-// should return { jobs: [{ id, title, salary, equity, companyHandle,companyName },...]}
-// No auth required
 
+/** GET / =>
+ *   { jobs: [ { id, title, salary, equity, companyHandle, companyName }, ...] }
+ *
+ * Can provide search filter in query:
+ * - minSalary
+ * - hasEquity (true returns only jobs with equity > 0, other values ignored)
+ * - title (will find case-insensitive, partial matches)
+
+ * Authorization required: none
+ */
 router.get('/', async function(req,res,next){
     const q= req.query
     // change str to ints and booleans
