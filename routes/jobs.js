@@ -66,7 +66,7 @@ router.get('/', async function(req,res,next){
 
 router.patch('/:id', ensureAdmin, async function(req,res,next){
     try{
-        const validate = (jsonschema.validate(req.body,jobNewSchema))
+        const validate = (jsonschema.validate(req.body,jobUpdateSchema))
 
         if (!validate.valid){
             const err = validate.errors.map(e => e.stack);
