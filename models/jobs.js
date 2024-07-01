@@ -1,7 +1,7 @@
 'use strict';
 
 const db = require("../db");
-const {NotFoundError} = require("../expressError");
+const { NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 
 
@@ -18,14 +18,13 @@ class Job {
             equity,
             companyHandle) 
             VALUES ($1, $2, $3, $4)
-            RETURNING id, title, salary, equity, company_handle AS "companyHandle"`
+            RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
             [
                 data.title,
                 data.salary,
                 data.equity,
                 data.companyHandle,
-            ]
-        );
+            ]);
         let job  = result.rows[0]
         return job;
     }
@@ -46,8 +45,8 @@ class Job {
         j.title,
         j.salary,
         j.equity,
-        j.companyHandle AS "companyHandle,
-        c.name AS "companyName
+        j.companyHandle AS "companyHandle",
+        c.name AS "companyName"
         FROM jobs j
         LEFT JOIN companies as c ON c.handle = j.company_handle`;
 
@@ -71,7 +70,7 @@ class Job {
         }
 
         if (whereExpressions.length > 0 ){
-            query += "WHERE" + whereExpressions.join(" AND");
+            query += " WHERE " + whereExpressions.join(" AND ");
         }
 
         // Return results of query

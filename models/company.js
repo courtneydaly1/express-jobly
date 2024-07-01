@@ -68,7 +68,7 @@ class Company {
 
     const {minEmployees, maxEmployees, name} = findByFilter;
 
-    if(minEmployees >maxEmployees){
+    if( minEmployees !== undefined && maxEmployees !== undefined && minEmployees > maxEmployees ){
       throw new BadRequestError("Min Empoyees cannot be more than Max Employees", 400)
     }
 
@@ -90,12 +90,12 @@ class Company {
     }
 
     if(whereExpressions.length >0){
-      query += "WHERE" + whereExpressions.join(" AND ");
+      query += " WHERE " + whereExpressions.join(" AND ");
     }
 
     // Final wording for query and return 
 
-    query =+ "ORDER BY name";
+    query =+ " ORDER BY name ";
     const companiesRes = await db.query(query, queryVal);
     return companiesRes.rows;
 
