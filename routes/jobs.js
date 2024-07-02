@@ -50,10 +50,9 @@ router.post("/", ensureAdmin, async (req,res,next)=>{
 router.get('/', async function(req,res,next){
     const q= req.query
     // change str to ints and booleans
-    if (q.minSalary !== undefined){
-        q.minSalary = +q.minSalary;
+    if (q.minSalary !== undefined) q.minSalary = +q.minSalary;
         q.hasEquity = q.hasEquity === "true"
-    }
+    
 
     try{
         const validate = jsonschema.validate(q, jobSearchSchema)
@@ -61,7 +60,9 @@ router.get('/', async function(req,res,next){
             const err = validate.errors.map(e=> e.stack);
             throw new BadRequestError(err)
         }
-
+        const jobs = await Job.findAll(q);
+        return res.json({ jobs });
+        
     } catch(e){
         return next(e)
     }

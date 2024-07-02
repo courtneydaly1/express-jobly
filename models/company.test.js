@@ -139,7 +139,7 @@ describe("findAll", function () {
     ]);
   });
   test("works: empty list on nothing found", async ()=>{
-    let companies = await Company.findAll( {name: "noName"});
+    let companies = await Company.findAll({name: "noName"});
     expect(companies).toEqual([]);
   });
 
@@ -169,7 +169,7 @@ describe("get", function () {
 
   test("not found if no such company", async function () {
     try {
-      await Company.get("nope");
+      await Company.get("nothing");
       fail();
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();

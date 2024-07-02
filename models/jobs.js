@@ -13,10 +13,7 @@ class Job {
     static async create(data){
         const result= await db.query(
             `INSERT INTO jobs 
-            (title,
-            salary,
-            equity,
-            companyHandle) 
+            (title, salary, equity, company_handle) 
             VALUES ($1, $2, $3, $4)
             RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
             [
@@ -45,28 +42,28 @@ class Job {
         j.title,
         j.salary,
         j.equity,
-        j.companyHandle AS "companyHandle",
+        j.company_handle AS "companyHandle",
         c.name AS "companyName"
         FROM jobs j
         LEFT JOIN companies as c ON c.handle = j.company_handle`;
 
         let whereExpressions = [];
-        let queryVal = [];
+        let queryValues = [];
 
         // For each search, add to whereExpressions and queryVal to generate SQL query
    
         if(minSalary !== undefined){
-            queryVal.push(minSalary);
-            whereExpressions.push(`salary >= $${queryVal.length}`);
+            queryValues.push(minSalary);
+            whereExpressions.push(`salary >= $${queryValues.length}`);
         }
 
         if(hasEquity === true){
-            whereExpressions.push(`equity >0`);
+            whereExpressions.push(`equity > 0`);
         }
 
         if(title !== undefined){
-            queryVal.push(`%${title}%`);
-            whereExpressions.push(`title ILIKE $${queryVal.length}`);
+            queryValues.push(`%${title}%`);
+            whereExpressions.push(`title ILIKE $${queryValues.length}`);
         }
 
         if (whereExpressions.length > 0 ){
@@ -75,8 +72,8 @@ class Job {
 
         // Return results of query
 
-        query += "ORDER BY title";
-        const jobsRes = await db.query(query, queryVal);
+        query += " ORDER BY title ";
+        const jobsRes = await db.query(query, queryValues);
         return jobsRes.rows;
 
     }

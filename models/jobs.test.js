@@ -215,7 +215,7 @@ describe("remove", function () {
   test("works", async function () {
     await Job.remove(testJobIds[0]);
     const res = await db.query(
-        "SELECT id FROM jobs WHERE id=$1", [testJobIds[0]]);
+        "SELECT id FROM jobs WHERE id=$1", [testJobIds[1]]);
     expect(res.rows.length).toEqual(0);
   });
 

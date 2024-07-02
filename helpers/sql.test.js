@@ -15,11 +15,11 @@ describe("sqlForPartialUpdate", ()=>{
 
     test("Correct with 2 inputs", ()=>{
         const results = sqlForPartialUpdate(
-            {f1: "value1", jsF2: "value2"},
-            {jsF2: "f2"}
+            { f1: "value1", jsF2: "value2"},
+            { jsF2: "f2" }
         );
-        expect(result).toEqual({
-            setCols: "\"f1\"=$1, \"f2\"=$2",
+        expect(results).toEqual({
+            setCols: "\"f1\"=$1, \"f2\=$2",
             values: ["value1", "value2"]
         });
     });
